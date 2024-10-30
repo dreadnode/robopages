@@ -1,0 +1,89 @@
+description: |
+  Netcat (nc) is the "Swiss Army Knife" of networking tools. It reads and writes data across network connections using TCP/UDP protocols. It's designed to be a reliable backend tool for scripts and programs while also serving
+  as a feature-rich network debugging and exploration utility.
+
+functions:
+  listen:
+    description: Listen for incoming connections on specified port
+    parameters:
+      port:
+        type: string
+        description: Port number to listen on
+        required: true
+      protocol:
+        type: string
+        description: Protocol to use (tcp/udp)
+        default: ""
+      verbose:
+        type: boolean
+        description: Enable verbose output
+        default: false
+
+    container:
+      image: subfuzion/netcat
+      args:
+        - --net=host
+
+    cmdline:
+      - nc
+      - -l
+      - -p
+      - ${port}
+      - ${verbose:+-v}
+      - ${protocol:+-u}
+
+  connect:
+    description: Connect to a remote host
+    parameters:
+      host:
+        type: string
+        description: Target hostname or IP
+        required: true
+      port:
+        type: string
+        description: Target port
+        required: true
+      timeout:
+        type: string
+        description: Connection timeout in seconds
+        default: "30"
+      zero_io:
+        type: boolean
+        description: Zero-I/O mode (for port scanning)
+        default: false
+
+    container:
+      image: subfuzion/netcat
+      args:
+        - --net=host
+
+    cmdline:
+      - nc
+      - -w
+      - ${timeout}
+      - ${zero_io:+-z}
+      - -v
+      - ${host}
+      - ${port}
+
+  port_scan:
+    description: Scan ports on target host
+    parameters:
+      host:
+        type: string
+        description: Target hostname or IP
+        required: true
+      port_range:
+        type: string
+        description: Port range to scan (e.g., 20-25)
+        required: true
+
+    container:
+      image: subfuzion/netcat
+
+    cmdline:
+      - nc
+      - -z
+      - -v
+      - ${host}
+      - ${port_range}

@@ -1,0 +1,129 @@
+description: |
+  Aircrack-ng is a complete suite of tools to assess WiFi network security. It focuses on different areas of WiFi security: monitoring, attacking, testing, and cracking. All tools are command line based, allowing for heavy scripting.
+
+functions:
+  crack_wpa:
+    description: Crack WPA/WPA2 handshake capture
+    parameters:
+      capture_file:
+        type: string
+        description: Path to capture file containing handshake
+        required: true
+      wordlist:
+        type: string
+        description: Path to wordlist file
+        required: true
+      essid:
+        type: string
+        description: Target network ESSID
+        required: false
+      bssid:
+        type: string
+        description: Target network BSSID
+        required: false
+
+    container:
+      image: aircrackng/release
+      volumes:
+        - ${capture_file}:/capture/wpa.cap
+        - ${wordlist}:/wordlists/words.txt
+
+    cmdline:
+      - aircrack-ng
+      - ${essid:+-e ${essid}}
+      - ${bssid:+-b ${bssid}}
+      - -w
+      - /wordlists/words.txt
+      - /capture/wpa.cap
+
+  capture:
+    description: Capture packets from wireless interface
+    parameters:
+      interface:
+        type: string
+        description: Wireless interface in monitor mode
+        required: true
+      channel:
+        type: string
+        description: Channel to capture on
+        default: ""
+      bssid:
+        type: string
+        description: Target network BSSID
+        default: ""
+      output:
+        type: string
+        description: Output file prefix
+        required: true
+
+    container:
+      image: aircrackng/release
+        - --net=host
+        - --privileged
+
+    cmdline:
+      - airodump-ng
+      - ${channel:+-c ${channel}}
+      - ${bssid:+--bssid ${bssid}}
+      - -w
+      - ${output}
+      - ${interface}
+
+  deauth:
+    description: Send deauthentication packets
+    parameters:
+      interface:
+        type: string
+        description: Wireless interface in monitor mode
+        required: true
+      bssid:
+        type: string
+        description: Target AP BSSID
+        required: true
+      client:
+        type: string
+        description: Target client MAC
+        default: ""
+      count:
+        type: string
+        description: Number of deauth packets
+        default: "5"
+
+    container:
+      image: aircrackng/release
+      args:
+        - --net=host
+        - --privileged
+
+    cmdline:
+      - aireplay-ng
+      - --deauth
+      - ${count}
+      - -a
+      - ${bssid}
+      - ${client:+-c ${client}}
+      - ${interface}
+
+  monitor_mode:
+    description: Enable monitor mode on wireless interface
+    parameters:
+      interface:
+        type: string
+        description: Wireless interface name
+        required: true
+      channel:
+        type: string
+        description: Lock to specific channel
+        default: ""
+
+    container:
+      image: aircrackng/release
+      args:
+        - --net=host
+        - --privileged
+
+    cmdline:
+      - airmon-ng
+      - start
+      - ${interface}
+      - ${channel}

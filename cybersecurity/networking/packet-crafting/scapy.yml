@@ -1,0 +1,66 @@
+description: |
+  Scapy is a powerful Python-based interactive packet manipulation program and library. It enables forging and decoding packets for various protocols, packet capture, pcap handling, and network discovery. It can replace many traditional tools like tcpdump, wireshark, and hping.
+
+functions:
+  packet_craft:
+    description: Create and send custom network packets
+    parameters:
+      dst_ip:
+        type: string
+        description: Destination IP address
+        required: true
+      protocol:
+        type: string
+        description: Protocol to use (TCP, UDP, ICMP)
+        required: true
+      dst_port:
+        type: string
+        description: Destination port (for TCP/UDP)
+        default: "80"
+      count:
+        type: string
+        description: Number of packets to send
+        default: "1"
+
+    container:
+      image: travelping/scapy
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+
+    cmdline:
+      - python3
+      - -c
+      - |
+        from scapy.all import *
+        packet = IP(dst="${dst_ip}")
+        if "${protocol}".upper() == "ICMP":
+            packet = packet/ICMP()
+        else:
+            packet = packet/"${protocol}"(dport=int("${dst_port}"))
+        send(packet, count=int("${count}"))
+
+  pcap_analyze:
+    description: Analyze pcap files using Scapy
+    parameters:
+      pcap_file:
+        type: string
+        description: Path to pcap file to analyze
+        required: true
+
+    container:
+      image: travelping/scapy
+      volumes:
+        - ${pcap_file}:/pcap/capture.pcap
+
+    cmdline:
+      - python3
+      - -c
+      - |
+        from scapy.all import *
+        packets = rdpcap("/pcap/capture.pcap")
+        print(f"Total packets: {len(packets)}")
+        for pkt in packets:
+            print(pkt.summary())

@@ -1,0 +1,166 @@
+description: |
+  Command-line tools from the Wireshark suite. Includes TShark (terminal-based Wireshark),dumpcap (packet capture engine), rawshark (raw packet filter), and other utilities for network packet capture and analysis.
+
+functions:
+  tshark_capture: # https://www.wireshark.org/docs/man-pages/
+    description: Capture and analyze packets with TShark
+    parameters:
+      interface:
+        type: string
+        description: Network interface to capture from
+        required: true
+      capture_filter:
+        type: string
+        description: BPF capture filter
+        default: ""
+      display_filter:
+        type: string
+        description: Wireshark display filter
+        default: ""
+      output:
+        type: string
+        description: Output pcap file path
+        default: ""
+
+    container:
+      image: geraldcombs/wireshark-cli
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+      volumes:
+        - ${output:+${output}:/capture/output.pcap}
+
+    cmdline:
+      - tshark
+      - -i
+      - ${interface}
+      - ${capture_filter:+-f "${capture_filter}"}
+      - ${display_filter:+-Y "${display_filter}"}
+      - ${output:+-w /capture/output.pcap}
+
+  dumpcap: # https://www.wireshark.org/docs/man-pages/
+    description: Capture packets with dumpcap (minimal capture engine)
+    parameters:
+      interface:
+        type: string
+        description: Network interface to capture from
+        required: true
+      filter:
+        type: string
+        description: Capture filter
+        default: ""
+      output:
+        type: string
+        description: Output pcap file
+        required: true
+      ring_buffer:
+        type: string
+        description: Number of files for ring buffer
+        default: ""
+
+    container:
+      image: geraldcombs/wireshark-cli
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+      volumes:
+        - ${output}:/capture/output.pcap
+
+    cmdline:
+      - dumpcap
+      - -i
+      - ${interface}
+      - ${filter:+-f "${filter}"}
+      - -w
+      - /capture/output.pcap
+      - ${ring_buffer:+-b files:${ring_buffer}}
+
+  rawshark: # https://www.wireshark.org/docs/man-pages/
+    description: Read raw packets from file using custom filters
+    parameters:
+      input_file:
+        type: string
+        description: Input file to read packets from
+        required: true
+      encapsulation:
+        type: string
+        description: Encapsulation type (e.g., eth, ieee-802-11)
+        required: true
+      filter:
+        type: string
+        description: Display filter
+        default: ""
+
+    container:
+      image: geraldcombs/wireshark-cli
+      volumes:
+        - ${input_file}:/capture/input.pcap
+
+    cmdline:
+      - rawshark
+      - -r
+      - /capture/input.pcap
+      - -d
+      - ${encapsulation}
+      - ${filter:+-F "${filter}"}
+
+  mergecap: # https://www.wireshark.org/docs/man-pages/
+    description: Merge multiple capture files
+    parameters:
+      input_files:
+        type: string
+        description: Comma-separated list of input files
+        required: true
+      output:
+        type: string
+        description: Output file path
+        required: true
+
+    container:
+      image: geraldcombs/wireshark-cli
+      volumes:
+        - ${input_files}:/capture/inputs/
+        - ${output}:/capture/output.pcap
+
+    cmdline:
+      - mergecap
+      - -w
+      - /capture/output.pcap
+      - /capture/inputs/*
+
+  editcap: # https://www.wireshark.org/docs/man-pages/
+    description: Edit capture files (truncate, split, time shift)
+    parameters:
+      input_file:
+        type: string
+        description: Input capture file
+        required: true
+      output:
+        type: string
+        description: Output file path
+        required: true
+      interval:
+        type: string
+        description: Split interval in seconds
+        default: ""
+      snaplen:
+        type: string
+        description: Snapshot length
+        default: ""
+
+    container:
+      image: geraldcombs/wireshark-cli
+      volumes:
+        - ${input_file}:/capture/input.pcap
+        - ${output}:/capture/output.pcap
+
+    cmdline:
+      - editcap
+      - ${interval:+-i ${interval}}
+      - ${snaplen:+-s ${snaplen}}
+      - /capture/input.pcap
+      - /capture/output.pcap

@@ -1,0 +1,35 @@
+description: Ettercap is a comprehensive suite for man in the middle attacks. It features sniffing of live connections, content filtering on the fly and many other interesting tricks. It supports active and passive dissection of many protocols and includes many features for network and host analysis.
+
+functions:
+  ettercap_arp_spoof:
+    description: Perform ARP spoofing attack to intercept network traffic between specified targets
+    parameters:
+      interface:
+        type: string
+        description: Network interface to use (e.g., eth0, wlan0)
+        required: true
+      target1:
+        type: string
+        description: First target IP/range (e.g., 192.168.1.1)
+        required: true
+      target2:
+        type: string
+        description: Second target IP/range (e.g., 192.168.1.0/24)
+        required: true
+
+    container:
+      image: mrecco/ettercap
+      args:
+        - --net=host
+        - --privileged
+
+    cmdline:
+      - ettercap
+      - -T
+      - -q
+      - -i
+      - ${interface}
+      - -M
+      - arp:remote
+      - /${target1}//
+      - /${target2}//

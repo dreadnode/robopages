@@ -1,0 +1,70 @@
+description: |
+  hping3 is a network tool for crafting and analyzing TCP/IP packets. It can send custom ICMP/UDP/TCP packets
+  and display target replies similar to ping. Features include firewall testing, port scanning, network performance
+  testing, MTU discovery, OS fingerprinting, and TCP/IP stack auditing.
+
+functions:
+  tcp_scan:
+    description: Perform TCP scan with custom flags and options
+    parameters:
+      target:
+        type: string
+        description: Target host or IP address
+        required: true
+      port:
+        type: string
+        description: Destination port (e.g., 80, 1-100)
+        required: true
+      flags:
+        type: string
+        description: TCP flags (e.g., -S for SYN, -F for FIN)
+        default: "-S"
+      interval:
+        type: string
+        description: Packet sending interval (e.g., u1000 for 1ms)
+        default: "u1000"
+
+    container:
+      image: utkudarilmaz/hping3
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+
+    cmdline:
+      - hping3
+      - ${target}
+      - -p
+      - ${port}
+      - ${flags}
+      - -i
+      - ${interval}
+      - --verbose
+
+  traceroute:
+    description: Perform traceroute using custom protocols
+    parameters:
+      target:
+        type: string
+        description: Target host or IP address
+        required: true
+      protocol:
+        type: string
+        description: Protocol (-1 for ICMP, -2 for UDP, default TCP)
+        default: ""
+
+    container:
+      image: utkudarilmaz/hping3
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+
+    cmdline:
+      - hping3
+      - --traceroute
+      - -V
+      - ${protocol}
+      - ${target}

@@ -1,0 +1,101 @@
+description: |
+  Wireshark is the world's foremost and widely-used network protocol analyzer. It lets you see what's happening on your network at a microscopic level and is the de facto standard across many commercial and non-profit enterprises, government agencies, and educational institutions.
+
+functions:
+  capture_live:
+    description: Capture live network traffic with TShark (CLI version)
+    parameters:
+      interface:
+        type: string
+        description: Network interface to capture from
+        required: true
+      filter:
+        type: string
+        description: Capture filter (e.g., 'port 80' or 'host 192.168.1.1')
+        default: ""
+      duration:
+        type: string
+        description: Duration of capture in seconds
+        default: "60"
+      output:
+        type: string
+        description: Output pcap file path
+        required: true
+
+    container:
+      image: linuxserver/wireshark:latest
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+      volumes:
+        - ${output}:/capture/output.pcap
+
+    cmdline:
+      - tshark
+      - -i
+      - ${interface}
+      - ${filter:+-f "${filter}"}
+      - -a
+      - duration:${duration}
+      - -w
+      - /capture/output.pcap
+
+  analyze_pcap:
+    description: Analyze existing pcap file with TShark
+    parameters:
+      input_file:
+        type: string
+        description: Input pcap file to analyze
+        required: true
+      display_filter:
+        type: string
+        description: Display filter for analysis
+        default: ""
+      fields:
+        type: string
+        description: Fields to display (e.g., 'frame.time,ip.src,ip.dst,tcp.port')
+        default: ""
+
+    container:
+      image: linuxserver/wireshark:latest
+      volumes:
+        - ${input_file}:/capture/input.pcap
+
+    cmdline:
+      - tshark
+      - -r
+      - /capture/input.pcap
+      - ${display_filter:+-Y "${display_filter}"}
+      - ${fields:+-T fields -e ${fields}}
+
+  gui_mode:
+    description: Launch Wireshark GUI (requires X11 forwarding)
+    parameters:
+      interface:
+        type: string
+        description: Network interface to capture from
+        required: false
+
+    container:
+      image: linuxserver/wireshark:latest
+      args:
+        - --net=host
+      cap_add:
+        - NET_RAW
+        - NET_ADMIN
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=Etc/UTC
+      volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix
+      devices:
+        - /dev/net/tun
+      security_opt:
+        - seccomp=unconfined
+
+    cmdline:
+      - wireshark
+      - ${interface:+-i ${interface}}
