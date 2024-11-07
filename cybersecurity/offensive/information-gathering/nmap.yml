@@ -4,9 +4,9 @@ description: >
   In addition to the interesting ports table, Nmap can provide further information on targets, including reverse DNS names, operating system guesses, device types, and MAC addresses.
 
 categories:
+  - cybersecurity
+  - offensive
   - information-gathering
-  - reconnaissance
-  - networking
 
 functions:
   nmap_tcp_ports_syn_scan:

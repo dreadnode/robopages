@@ -1,10 +1,8 @@
 description: TruffleHog is the most powerful secrets Discovery, Classification, Validation, and Analysis tool. In this context secret refers to a credential a machine uses to authenticate itself to another machine. This includes API keys, database passwords, private encryption keys, and more.
 
 categories:
+  - cybersecurity
   - cicd
-  - secrets
-  - information-gathering
-  - reconnaissance
 
 functions:
   trufflehog_scan:

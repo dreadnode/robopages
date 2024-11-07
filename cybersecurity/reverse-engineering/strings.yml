@@ -1,10 +1,9 @@
 description: The best reverse engineering tool that's ever been created.
 
 categories:
+  - cybersecurity
+  - offensive
   - reverse-engineering
-  - binary-analysis
-  - malware-analysis
-  - forensics
 
 functions:
   print_strings_in_file:

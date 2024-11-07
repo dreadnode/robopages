@@ -1,9 +1,9 @@
 description: Graphinder is a tool that extracts all GraphQL endpoints from a given domain.
 
 categories:
+  - cybersecurity
+  - offensive
   - information-gathering
-  - reconnaissance
-  - graphql
 
 functions:
   graphinder_url_scan:

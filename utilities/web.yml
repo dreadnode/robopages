@@ -2,8 +2,6 @@ description: A set of web related utilities.
 
 categories:
   - utilities
-  - web
-  - http
 
 functions:
   http_get:

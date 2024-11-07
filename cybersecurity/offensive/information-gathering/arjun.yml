@@ -1,9 +1,9 @@
 description: Web applications use parameters (or queries) to accept user input. Arjun finds valid HTTP parameters with a huge default dictionary of 10,985 parameter names.
 
 categories:
+  - cybersecurity
+  - offensive
   - information-gathering
-  - reconnaissance
-  - osint
 
 functions:
   arjun_target_scan:
