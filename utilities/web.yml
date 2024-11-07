@@ -1,5 +1,10 @@
 description: A set of web related utilities.
 
+categories:
+  - utilities
+  - web
+  - http
+
 functions:
   http_get:
     description: Perform an HTTP GET request to a given URL.

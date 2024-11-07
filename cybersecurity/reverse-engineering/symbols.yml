@@ -1,5 +1,11 @@
 description: Function to print exported and imported symbols from a binary.
 
+categories:
+  - reverse-engineering
+  - binary-analysis
+  - malware-analysis
+  - forensics
+
 functions:
   print_exported_symbols_in_file:
     description: Find the exported symbols in an executable file or a library.

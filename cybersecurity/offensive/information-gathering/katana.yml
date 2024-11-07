@@ -1,5 +1,10 @@
 description: Katana is a fast crawler focused on execution in automation pipelines offering both headless and non-headless crawling.
 
+categories:
+  - information-gathering
+  - reconnaissance
+  - crawler
+
 functions:
   katana_headless_crawler:
     description: "Crawls a target or list of targets in headless mode"

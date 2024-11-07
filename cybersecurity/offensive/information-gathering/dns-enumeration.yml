@@ -1,5 +1,10 @@
 description: This page uses Legba for DNS enumeration.
 
+categories:
+  - information-gathering
+  - reconnaissance
+  - dns-enumeration
+
 functions:
   enum_host_subdomains:
     description: Enumerate subdomains of a target host.

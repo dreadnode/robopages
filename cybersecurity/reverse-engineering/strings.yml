@@ -1,5 +1,11 @@
 description: The best reverse engineering tool that's ever been created.
 
+categories:
+  - reverse-engineering
+  - binary-analysis
+  - malware-analysis
+  - forensics
+
 functions:
   print_strings_in_file:
     description: Find the printable strings in a file.

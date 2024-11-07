@@ -1,5 +1,10 @@
 description: feroxbuster is a tool designed to perform Forced Browsing. Forced browsing is an attack where the aim is to enumerate and access resources that are not referenced by the web application, but are still accessible by an attacker.
 
+categories:
+  - information-gathering
+  - reconnaissance
+  - http
+
 functions:
   feroxbuster_bruteforce_file_extensions:
     description: "Brute-forces .pdf, .js, .html, .php, .txt, .json, and .docx lookups to each target with Burp proxy."

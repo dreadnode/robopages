@@ -1,5 +1,10 @@
 description: httpx is a fast and multi-purpose HTTP toolkit that allows running multiple probes using the retryablehttp library. It is designed to maintain result reliability with an increased number of threads.
 
+categories:
+  - information-gathering
+  - reconnaissance
+  - http
+
 functions:
   httpx_tech_detect:
     description: Run multiple HTTP probes on a target to fingerprint the web technology stack.
