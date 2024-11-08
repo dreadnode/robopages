@@ -1,12 +1,4 @@
-description: |
-  The best reverse engineering tool that's ever been created.
-  Strings looks for ASCII strings in a binary file or standard input.  Strings is useful for identifying random object files and many other things.  A string is any sequence of 4 (the default) or
-  more printing characters [ending at, but not including, any other character or EOF].
-
-categories:
-  - cybersecurity
-  - offensive
-  - reverse-engineering
+description: The best reverse engineering tool that's ever been created.
 
 functions:
   print_strings_in_file:
@@ -18,9 +10,6 @@ functions:
         examples:
           - /path/to/binary
           - /Applications/Firefox.app/Contents/MacOS/firefox
-
-    container:
-      image: alpine
 
     cmdline:
       - /usr/bin/strings
