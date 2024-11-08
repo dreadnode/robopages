@@ -19,6 +19,9 @@ functions:
           - /path/to/binary
           - /Applications/Firefox.app/Contents/MacOS/firefox
 
+    container:
+      image: alpine
+
     cmdline:
-      - strings
+      - /usr/bin/strings
       - ${file_path}
