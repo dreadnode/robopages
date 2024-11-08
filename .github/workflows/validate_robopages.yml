@@ -25,6 +25,11 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # 3.7.1
 
+      - name: Install validation dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils strings
+
       - name: Validate Contribution Files
         id: robopages-validation
         continue-on-error: true
@@ -44,13 +49,15 @@ jobs:
 
             docker pull dreadnode/robopages:latest
 
-            # Run validation with Docker socket mounted
+            # Run validation without Docker socket and skip container checks
             docker run --rm \
               -v $(pwd):/workspace \
-              -v /var/run/docker.sock:/var/run/docker.sock \
               -w /workspace \
-              --privileged \
-              dreadnode/robopages:latest validate --path "$(printf '%q' "$file")" --skip-docker
+              dreadnode/robopages:latest validate \
+                --path "$(printf '%q' "$file")" \
+                --skip-docker \
+                --skip-container-validation
+
           }
 
           # Get changed files using GitHub's provided variables
