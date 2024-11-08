@@ -1,4 +1,7 @@
-description: The best reverse engineering tool that's ever been created.
+description: |
+  The best reverse engineering tool that's ever been created.
+  Strings looks for ASCII strings in a binary file or standard input.  Strings is useful for identifying random object files and many other things.  A string is any sequence of 4 (the default) or
+  more printing characters [ending at, but not including, any other character or EOF].
 
 categories:
   - cybersecurity
@@ -17,5 +20,5 @@ functions:
           - /Applications/Firefox.app/Contents/MacOS/firefox
 
     cmdline:
-      - /usr/bin/strings
+      - strings
       - ${file_path}
