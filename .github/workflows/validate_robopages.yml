@@ -63,19 +63,21 @@ jobs:
             validate_file "$file" || exit 1
           done
 
-      - name: Post validation status
-        if: always()
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea #7.0.1
-        with:
-          script: |
-            const validation_status = '${{ steps.robopages-validation.outcome }}' === 'success'
-              ? '✅ Validation successful'
-              : '❌ Validation failed';
+          - name: Post validation status
+          if: always()
+          uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea #7.0.1
+          with:
+            script: |
+              const validation_status = '${{ steps.robopages-validation.outcome }}' === 'success'
+                ? '✅ Validation successful'
+                : '❌ Validation failed';
 
-            github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              body: `## Validation Results\n${validation_status}\n\nPlease ensure your contribution follows the required format.`,
-              event: 'COMMENT'
-            });
+              const runUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+              github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                body: `## Validation Results\n${validation_status}\n\nPlease ensure your contribution follows the required format.\n\n[View Run Details](${runUrl})`,
+                event: 'COMMENT'
+              });
