@@ -2,7 +2,9 @@ name: Update PR Description with Rigging
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types:
+      - edited  # Trigger when the PR is updated (e.g., title, description, or labels)
+      - reopened  # Trigger when the PR is reopened
 
 jobs:
   update-description:

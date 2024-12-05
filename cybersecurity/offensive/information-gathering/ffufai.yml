@@ -1,0 +1,64 @@
+description: >
+  ffufai is an AI-powered web fuzzing tool that combines the power of ffuf with
+  artificial intelligence to find hidden endpoints and vulnerabilities in web applications.
+  Requires either an OpenAI API key or Anthropic API key for AI-powered analysis.
+
+functions:
+  ffufai_default_scan:
+    description: Perform a default fuzzing scan against a web target
+    parameters:
+      target:
+        type: string
+        description: The target URL to fuzz
+        examples:
+          - https://example.com
+          - http://localhost:8080
+    container:
+      platform: linux/amd64
+      image: ffufai
+      args:
+        - --net=host
+      volumes:
+        - ${cwd}:/data
+    cmdline:
+      - ffufai
+      - --openai-key
+      - ${env.OPENAI_API_KEY}
+      - --anthropic-key
+      - ${env.ANTHROPIC_API_KEY}
+      - -u
+      - ${target}
+
+  ffufai_full_scan:
+    description: Perform comprehensive fuzzing with AI analysis
+    parameters:
+      target:
+        type: string
+        description: The target URL to fuzz
+        examples:
+          - https://example.com
+      wordlist:
+        type: string
+        description: Wordlist to use for fuzzing
+        default: big.txt
+      threads:
+        type: integer
+        description: Number of concurrent threads
+        default: 40
+    container:
+      platform: linux/amd64
+      image: ffufai
+      args:
+        - --net=host
+      volumes:
+        - ${cwd}:/data
+    cmdline:
+      - ffufai
+      - --openai-key
+      - ${env.OPENAI_API_KEY}
+      - --anthropic-key
+      - ${env.ANTHROPIC_API_KEY}
+      - -u
+      - ${target}
+      - -w
+      - /app/wordlists/${wordlist}
