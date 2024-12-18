@@ -1,0 +1,746 @@
+description: Apollo is a Windows agent written in C# using the 4.0 .NET Framework designed to be used in SpecterOps training offerings. The agent is designed to be used with the Mythic C2 server.
+
+functions:
+  assembly_inject:
+    description: Execute .NET assembly in remote process.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+      assembly:
+        type: string
+        description: The assembly to inject.
+      args:
+        type: string
+        description: Arguments to pass to the assembly.
+    cmdline:
+      - assembly_inject
+      - -PID
+      - ${pid}
+      - -Assembly
+      - ${assembly}
+      - -Arguments
+      - ${args}
+  blockdlls:
+    description: Block non-Microsoft signed DLLs from loading into post-ex jobs.
+    parameters:
+      enable:
+        type: boolean
+        description: Enable or disable blockdlls.
+    cmdline:
+      - blockdlls
+      - -EnableBlock
+      - ${enable}
+    
+  cat: 
+    description: Retrieve the output of a file.
+    parameters:
+      file:
+        type: string
+        description: The file to retrieve.
+    cmdline:
+      - cat
+      - -Path
+      - ${file}
+  cd:
+    description: Change working directory.
+    parameters:
+      dir:
+        type: string
+        description: The directory to change to.
+    cmdline:
+      - cd
+      - -Path
+      - ${dir}
+  cp:
+    description: Copy a file from path to destination.
+    parameters:
+      source:
+        type: string
+        description: The source file to copy.
+      destination:
+        type: string
+        description: The destination to copy the file to.
+    cmdline:
+      - cp
+      - -Path
+      - ${source}
+      - -Destination
+      - ${destination}
+  dcsync:
+    description: DCSync one or more user credentials.
+    parameters:
+      domain:
+        type: string
+        description: The domain to DCSync.
+      user:
+        type: string
+        description: The user to DCSync.
+      dc:
+        type: string
+        description: The domain controller to DCSync.
+    cmdline:
+      - dcsync
+      - -Domain
+      - ${domain}
+      - -User
+      - ${user}
+      - -DC
+      - ${dc}
+  download:
+    description: Download a file off the target system.
+    parameters:
+      Path:
+        type: string
+        description: The path to download the file to.
+      Host:
+        type: string
+        description: The hostname to download the file from.
+    cmdline:
+      - download
+      - -Path
+      - ${Path}
+      - -Host
+      - ${Host}
+  execute_assembly:
+    description: Execute a .NET assembly registered with register_file.
+    parameters:
+      assembly:
+        type: string
+        description: The assembly to execute.
+      args:
+        type: string
+        description: Arguments to pass to the assembly.
+    cmdline:
+      - execute_assembly
+      - -Assembly
+      - ${assembly}
+      - -Arguments
+      - ${args}
+  execute_coff:
+    description: Execute a object file (BOF) that's been registered with register_file.
+    parameters:
+      object:
+        type: string
+        description: The object file to execute.
+      function:
+        type: string
+        description: The function to execute.
+      timeout:
+        type: integer
+        description: The timeout for the execution.
+      args:
+        type: string
+        description: Arguments to pass to the object file.
+    cmdline:
+      - execute_coff
+      - -Coff
+      - ${object}
+      - -Function
+      - ${function}
+      - -Timeout
+      - ${timeout}
+      - -Arguments
+      - ${args}
+  execute_pe:
+    description: Execute a statically compiled executable that's been registered with register_file.
+    parameters:
+      binary:
+        type: string
+        description: The binary to execute.
+      args:
+        type: string
+        description: Arguments to pass to the binary.
+    cmdline:
+      - execute_pe
+      - -PE
+      - ${binary}
+      - -Arguments
+      - ${args}
+  exit:
+    description: Task agent to exit.
+    cmdline:
+      - exit
+  get_injection_techniques:
+    description: Show currently registered injection techniques as well as the current technique.
+    cmdline:
+      - get_injection_techniques
+  get_privs:
+    description: Enable as many privileges as possible for the current access token.
+    cmdline:
+      - getprivs   
+  ifconfig:
+    description: Get Network Adapters and Interfaces
+    cmdline:
+      - ifconfig
+  inject:
+    description: Inject a new payload into a remote process.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+      payload:
+        type: string
+        description: The payload to inject.
+    cmdline:
+      - inject
+      - -PID
+      - ${pid}
+      - -Payload
+      - ${payload}
+  inline_assembly:
+    description: Execute a .NET assembly in the currently executing process that's been registered with register_file.
+    parameters:
+      Assembly:
+        type: string
+        description: The assembly to execute.
+      Arguments:
+        type: string
+        description: Additional arguments to pass to the assembly.
+    cmdline:
+      - inline_assembly
+      - -Assembly
+      - ${Assembly}
+      - -Arguments
+      - ${Arguments}
+  jobkill: 
+    description: Kill a running job in the agent.
+    parameters:
+      jid:
+        type: integer
+        description: The job ID to kill.
+    cmdline:
+      - jobkill
+      - ${jid}
+  jobs:
+    description: List all running jobs.
+    cmdline:
+      - jobs
+  keylog_inject:
+    description: Inject a keylogger into a remote process.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+    cmdline:
+      - keylog_inject
+      - -PID
+      - ${pid}
+  kill:
+    description: Attempt to kill the process specified by [pid].
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to kill.
+    cmdline:
+      - kill
+      - -PID
+      - ${pid}
+  link:
+    description: Link to a P2P agent via SMB or TCP.
+    cmdline:
+      - link
+  load:
+    description: Load new commands into the agent.
+    parameters:
+      commands:
+        type: string
+        description: The commands to load.
+    cmdline:
+      - load
+      - ${commands}
+  ls:
+    description: List files and folders in [path]. Defaults to current working directory.
+    parameters:
+      path:
+        type: string
+        description: The path to list files and folders in.
+    cmdline:
+      - ls
+      - -Path
+      - ${path}
+
+  make_token:
+    description: Impersonate a user using plaintext credentials.
+    cmdline:
+      - make_token
+  mimikatz:
+    description: Execute Mimikatz with the specified arguments.
+    parameters:
+      Command:
+        type: string
+        description: The command to execute
+    cmdline:
+      - mimikatz
+      - -Command
+      - ${Command}
+  mkdir:
+    description: Create a directory.
+    parameters:
+      dir:
+        type: string
+        description: The directory to create.
+    cmdline:
+      - mkdir
+      - -Path
+      - ${dir}
+  mv:
+    description: Move a file from source to destination.
+    parameters:
+      source:
+        type: string
+        description: The source file to move.
+      destination:
+        type: string
+        description: The destination to move the file to.
+    cmdline:
+      - mv
+      - -Path
+      - ${source}
+      - -Destination
+      - ${destination}
+  net_dclist:
+    description: List all domain controllers for the current or specified domain.
+    parameters:
+      domain:
+        type: string
+        description: The domain to list domain controllers for.
+    cmdline:
+      - net_dclist
+      - ${domain}
+  net_localgroup_member:
+    description: Retrieve membership information from a specified group on a given computer.
+    parameters:
+      Group:
+        type: string
+        description: The group to retrieve membership information from.
+      Computer:
+        type: string
+        description: The computer to retrieve membership information from.
+    cmdline:
+      - net_localgroup_member
+      - -Group
+      - ${Group}
+      - -Computer
+      - ${Computer}
+  net_localgroup:
+    description: Retrieve local groups known by a computer. Default to localhost.
+    parameters:
+      computer:
+        type: string
+        description: The computer to retrieve local groups from.
+    cmdline:
+      - net_localgroup
+      - ${computer}
+  net_shares:
+    description: Show shares of a remote PC.
+    parameters:
+      computer:
+        type: string
+        description: The computer to show shares from.
+    cmdline:
+      - net_shares
+      - -Computer
+      - ${computer}
+  netstat:
+    description: Get TCP and UDP connections.
+    parameters:
+      Tcp:
+        type: boolean
+        description: Get TCP connections.
+      Udp:
+        type: boolean
+        description: Get UDP connections.
+      Established:
+        type: boolean
+        description: Get established connections.
+      Listen:
+        type: boolean
+        description: Get listening connections.
+    cmdline:
+      - netstat
+      - -Tcp
+      - ${Tcp}
+      - -Udp
+      - ${Udp}
+      - -Established
+      - ${Established}
+      - -Listen
+      - ${Listen}
+  powerpick:
+    description: Executes PowerShell in a sacrificial process.
+    parameters:
+      command:
+        type: string
+        description: The command to execute.
+    cmdline:
+      - powerpick
+      - -Command
+      - ${command}
+  powershell:
+    description: Executes PowerShell in your currently running process.
+    parameters:
+      command:
+        type: string
+        description: The command to execute.
+    cmdline:
+      - powershell
+      - -Command
+      - ${command}
+  powershell_import:
+    description: Register a new .ps1 file to be used in other PowerShell jobs.
+    cmdline:
+      - powershell_import
+  ppid:
+    description: Set the PPID of sacrificial jobs to the specified PID.
+    parameters:
+      pid:
+        type: integer
+        description: The PID to set the PPID to.
+    cmdline:
+      - ppid
+      - -PID
+      - ${pid}
+  printspoofer:
+    description: Execute a command in SYSTEM integrity so long as you have SeImpersonate privileges.
+    parameters:
+      command:
+        type: string
+        description: The command to execute
+    cmdline:
+      - printspoofer
+      - -Command
+      - ${command}
+  ps: 
+    description: List process information.
+    cmdline:
+      - ps
+  psinject:
+    description: Executes PowerShell in the process specified by [pid]. Currently stdout is not captured of child processes if not explicitly captured into a variable or via inline execution (such as $(whoami)).
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+      command:
+        type: string
+        description: The command to execute
+    cmdline:
+      - psinject
+      - -PID
+      - ${pid}
+      - -Command
+      - ${command}
+  pth:
+    description: Use mimikatz's pth module to spawn a process with alternate credentials.
+    parameters:
+      domain:
+        type: string
+        description: The domain to use.
+      username:
+        type: string
+        description: The username to use.
+      ntlm_hash:
+        type: string
+        description: The NTLM hash to use.
+      aes128_key:
+        type: string
+        description: The AES128 key to use.
+      aes256_key:
+        type: string
+        description: The AES256 key to use.
+      program:
+        type: string
+        description: The program to run.
+    cmdline:
+      - pth
+      - -Domain
+      - ${domain}
+      - -User
+      - ${username}
+      - -NTLM
+      - ${ntlm_hash}
+      - -AES128
+      - ${aes128_key}
+      - -AES256
+      - ${aes256_key}
+      - -Run
+      - ${program}
+  pwd:
+    description: Print working directory.
+    cmdline:
+      - pwd
+  reg_query:
+    description: Query all subkeys of the specified registry path. Needs to be of the format HKCU:\, HKLM:\, or HKCR:\.
+    parameters:
+      Hive:
+        type: string
+        description: The registry hive to query.
+      Key:
+        type: string
+        description: The registry key to query.
+    cmdline:
+      - reg_query
+      - -Hive
+      - ${Hive}
+      - -Key
+      - ${Key}
+  reg_read_value:
+    description: Read specified values from the registry keys.
+    parameters:
+      Hive:
+        type: string
+        description: The registry hive to read from.
+      Key:
+        type: string
+        description: The registry key to read from.
+      Name:
+        type: string
+        description: The value name to read.
+    cmdline:
+      - reg_read_value
+      - -Hive
+      - ${Hive}
+      - -Key
+      - ${Key}
+      - -Name
+      - ${Name}
+  register_assembly:
+    description: Register a .NET assembly with the agent to be used in .NET post-exploitation activities
+    cmdline:
+      - register_assembly
+
+  register_file:
+    description: Register a file to the agent's file cache. Used to store assemblies, executables, and PowerShell scripts.
+    cmdline:
+      - register_file
+  rev2self:
+    description: Revert the access token to the original access token.
+    cmdline:
+      - rev2self
+  rm:
+    description: Remove a file specified by [path]. Alternatively, if -File is provided, -Path will be used as the directory, and -File will be the filename.
+    parameters:
+      path:
+        type: string
+        description: The path to remove the file from.
+      Host:
+        type: string
+        description: The hostname to remove the file from.
+      File:
+        type: string
+        description: The file to remove.
+    cmdline:
+      - rm
+      - -Path
+      - ${path}
+      - -Host
+      - ${Host}
+      - -File
+      - ${File}
+  run:
+    description: Run the binary specified by [binary.exe] with passed arguments (if any).
+    parameters:
+      binary:
+        type: string
+        description: The binary to run.
+      args:
+        type: string
+        description: The arguments to pass to the binary.
+    cmdline:
+      - run
+      - -Executable
+      - ${binary}
+      - -Arguments
+      - ${args}
+  sc: 
+    description: .NET implementation of the Service Control Manager.
+    parameters:
+      Query:
+        type: boolean
+        description: Query a service.
+      Start:
+        type: boolean
+        description: Start a service.
+      Stop:
+        type: boolean
+        description: Stop a service.
+      Create:
+        type: boolean
+        description: Create a service.
+      Delete:
+        type: boolean
+        description: Delete a service.
+      Computer:
+        type: string
+        description: The computer to perform the action on.
+      DisplayName:
+        type: string
+        description: The display name of the service.
+      ServiceName:
+        type: string
+        description: The service name.
+      BinPath:
+        type: string
+        description: The binary path of the service.
+    cmdline:
+      - sc
+      - -Query
+      - ${Query}
+      - -Start
+      - ${Start}
+      - -Stop
+      - ${Stop}
+      - -Create
+      - ${Create}
+      - -Delete
+      - ${Delete}
+      - -Computer
+      - ${Computer}
+      - -DisplayName
+      - ${DisplayName}
+      - -ServiceName
+      - ${ServiceName}
+      - -BinPath
+      - ${BinPath}
+  screenshot_inject:
+    description: Get a screenshot of the desktop session associated with PID every Interval seconds for Count screenshots.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+      Interval:
+        type: integer
+        description: The interval to take screenshots.
+      Count:
+        type: integer
+        description: The number of screenshots to take.
+    cmdline:
+      - screenshot_inject
+      - -PID
+      - ${pid}
+      - -Interval
+      - ${Interval}
+      - -Count
+      - ${Count}
+  screenshot:
+    description: Get a screenshot of the current screen.
+    cmdline:
+      - screenshot
+  set_injection_technique:
+    description: Set the injection technique used in post-ex jobs that require injection.
+    parameters:
+      technique:
+        type: string
+        description: The injection technique to use.
+    cmdline:
+      - set_injection_technique
+      - ${technique}
+  shell:
+    description: Run a shell command which will translate to a process being spawned with command line (cmd.exe /S /c [command])
+    parameters:
+      command:
+        type: string
+        description: The command to execute
+    cmdline:
+      - shell
+      - ${command}
+  shinject:
+    description: Inject given shellcode into a specified pid.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to inject into.
+      shellcode:
+        type: string
+        description: The shellcode to inject.
+    cmdline:
+      - shinject
+      - -PID
+      - ${pid}
+      - -Shellcode
+      - ${shellcode}
+  sleep:
+    description: Set the callback interval of the agent in seconds.
+    parameters:
+      seconds:
+        type: integer
+        description: The number of seconds to sleep.
+    cmdline:
+      - sleep
+      - ${seconds}
+  socks:
+    description: Standup the socks server to proxy network traffic, routable via Mythic on [port].
+    parameters:
+      port:
+        type: integer
+        description: The port to standup the socks server on.
+    cmdline:
+      - socks
+      - -Port
+      - ${port}
+  spawn:
+    description: Spawn a new callback in the postex process specified by spawnto_*.
+    cmdline:
+      - spawn
+  spawnto_x64:
+    description: Sets the process used in jobs requiring sacrificial processes to the specified [path] with arguments [args].
+    parameters:
+      Application:
+        type: string
+        description: The path to the application.
+      Arguments:
+        type: string
+        description: The arguments to pass to the application.
+    cmdline:
+      - spawnto_x64
+      - -Application
+      - ${Application}
+      - -Arguments
+      - ${Arguments}
+  spawnto_x86:
+    description: Sets the process used in jobs requiring sacrificial processes to the specified [path] with arguments [args].
+    parameters:
+      Application:
+        type: string
+        description: The path to the application.
+      Arguments:
+        type: string
+        description: The arguments to pass to the application.
+    cmdline:
+      - spawnto_x86
+      - -Application
+      - ${Application}
+      - -Arguments
+      - ${Arguments}
+  steal_token:
+    description: Attempts to steal the process's primary token specified by [pid] and apply it to our own session.
+    parameters:
+      pid:
+        type: integer
+        description: The process ID to steal the token from.
+    cmdline:
+      - steal_token
+      - ${pid}
+  unlink:
+    description: Unlink a callback linked to via the link command. Modal popup only.
+    cmdline:
+      - unlink
+  upload:
+    description: Upload a file to a remote path on the machine. Modal popup only.
+    parameters:
+      file:
+        type: string
+        description: The file to upload.
+      path:
+        type: string
+        description: The path to upload the file to.
+    cmdline:
+      - upload
+      - -File
+      - ${file}
+      - -Path
+      - ${path}
+  whoami:
+    description: Report access token for local and remote operations.
+    cmdline:
+      - whoami
