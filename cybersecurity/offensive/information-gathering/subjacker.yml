@@ -1,0 +1,27 @@
+description: >
+  Subjacker is a tool for hijacking subdomains. It can be used to find and take over subdomains that are no longer in use or have been abandoned by their owners. This can be useful for security researchers, penetration testers, and bug bounty hunters who want to identify potential vulnerabilities in a target's infrastructure.
+
+functions:
+  subjack_enum_host_subdomains:
+    description: Enumerate subdomains of a target host.
+    parameters:
+      target:
+        type: string
+        description: The domain name to enumerate subdomains for.
+        examples:
+          - example.com
+          - www.example.com
+
+    container:
+      image: projectdiscovery/subfinder
+      args:
+        - --net=host
+      volumes:
+        - ${cwd}:/data
+
+    cmdline:
+      - subfinder
+      - -d
+      - ${target}
+      - -recursive
+      - -all
