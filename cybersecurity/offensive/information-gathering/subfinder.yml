@@ -1,8 +1,8 @@
 description: >
-  Subjacker is a tool for hijacking subdomains. It can be used to find and take over subdomains that are no longer in use or have been abandoned by their owners. This can be useful for security researchers, penetration testers, and bug bounty hunters who want to identify potential vulnerabilities in a target's infrastructure.
+  subfinder is a subdomain discovery tool that returns valid subdomains for websites, using passive online sources. It has a simple, modular architecture and is optimized for speed. subfinder is built for doing one thing only - passive subdomain enumeration, and it does that very well.
 
 functions:
-  subjack_enum_host_subdomains:
+  subfinder_enum_host_subdomains:
     description: Enumerate subdomains of a target host.
     parameters:
       target:
