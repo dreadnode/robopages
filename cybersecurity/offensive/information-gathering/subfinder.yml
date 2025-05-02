@@ -25,3 +25,5 @@ functions:
       - ${target}
       - -recursive
       - -all
+      - -o
+      - /data/${target}.subdomains.txt
